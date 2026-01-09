@@ -26,4 +26,4 @@ class DependencyContainer:
 
 
 # 全局容器实例
-container = DependencyContainer()
+# container = DependencyContainer()

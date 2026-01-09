@@ -6,7 +6,8 @@
 import time
 import aiohttp
 from typing import Optional
-from src.utils.dependency.denpendency_container import container
+from src.utils.logger.logger_service import LoggerService
+from src.utils.global_context.global_context import GlobalContext
 
 
 class HikvisionClientAsync:
@@ -35,12 +36,10 @@ class HikvisionClientAsync:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
 
-        """注入依赖日志服务"""
-        """获取基础 logger"""
-        base_logger = container.get_logger("HikvisionClientAsync")
+        """上下文设置"""
+        GlobalContext.service_name.set(self.__class__.__name__)
 
-        """绑定 camera_ip"""
-        self.logger = base_logger.bind(ip=ip)
+        self.logger = LoggerService.get_instance()
 
     async def capture_image_async(self, channel: int = 1) -> Optional[bytes]:
         """
@@ -57,7 +56,7 @@ class HikvisionClientAsync:
             sock_connect=self.timeout,
         )
         start_time = time.time()
-        self.logger.info(f"Start Connected ...")
+        self.logger.info(f"Starting Connection ...")
         try:
             async with aiohttp.ClientSession(timeout=timeout) as session:
                 """此处Url需要替换可能是RTSP协议也可能是ISAPI协议"""
@@ -85,6 +84,8 @@ class HikvisionClientAsync:
         """异步测试连接"""
         try:
             image_data = await self.capture_image_async()
+            self.logger.success("Capture Image Complete")
             return image_data is not None
         except Exception as e:
+            print(str(e))
             return False
