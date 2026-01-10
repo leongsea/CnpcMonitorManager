@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import sys
-from loguru import logger
+from loguru import logger as _base_logger
 from pathlib import Path
+from src.utils.global_context.global_context import GlobalContext
+
+# 全局变量: 存储 patched logger
+_patched_logger = None
 
 class LoggerConfig(object):
     """日志配置类"""
@@ -17,7 +21,7 @@ class LoggerConfig(object):
     #         logger.success(f"Found {cls.__name__}._instance.")
     #     return cls._instance
 
-    def __init__(self, log_dir:str = "../storage/logs", app_name:str = "my_app"):
+    def __init__(self, log_dir:str = "../storage/logs", app_name:str = "cnpc_monitor"):
         self.log_dir = Path(log_dir)
         self.app_name = app_name
         self.log_dir.mkdir(parents=True, exist_ok=True)
@@ -25,28 +29,31 @@ class LoggerConfig(object):
 
     def setup_logger(self):
         """配置结构化日志"""
-        # if self._configured:
-        #     logger.warning("Logger already configured.")
-        #     return
+        global _patched_logger
 
         """移除默认logger"""
-        logger.remove()
+        _base_logger.remove()
 
         """自定义格式化函数"""
         def format_record(record):
-            level = record["level"].name
+            # 获取自定义的extra_fields
             extra = record["extra"]
+
+            # 获取该条日志的等级
+            level = record["level"].name
+
+            # 以下是获取自定义字段的相关内容
+            # name = extra.get("app_name")
             service = extra.get("service_name")
             request_id = extra.get("request_id", "N/A")
             user_id = extra.get("user_id", "N/A")
-            ip = extra.get("device_ip")
+            host_ip = extra.get("host_ip")
+            elapsed_time = extra.get("elapsed_time")
 
             """基础格式"""
             parts = [
                 "<white>{time:YYYY-MM-DD HH:mm:ss}</white>",
                 "<level>{level: <8}</level>",
-                f"<blue>{service}</blue>",
-                # "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>"
             ]
 
             """Display the function field conditionally according to user level."""
@@ -54,14 +61,20 @@ class LoggerConfig(object):
                 parts.append("<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>")
 
             """动态绑定字段"""
-            if request_id != "N/A":
-                parts.append(f"<magenta>req:{request_id[:8]}</magenta>")
+            if service and service is not None:
+                parts.append(f"<blue>{service}</blue>")
 
-            if user_id != "N/A" and user_id != "anonymous":
-                parts.append(f"<cyan>user:{user_id}</cyan>")
+            if request_id and request_id !='N/A':
+                parts.append(f"<magenta>request_ID:{request_id[:64]}</magenta>")
 
-            if ip:
-                parts.append(f"<yellow>IP:{ip}</yellow>")
+            if user_id and user_id != "N/A":
+                parts.append(f"<cyan>user_ID:{user_id}</cyan>")
+
+            if host_ip:
+                parts.append(f"<yellow>{host_ip}</yellow>")
+
+            if elapsed_time:
+                parts.append(f"<red>Elapsed_time: {elapsed_time:.2f} s</red>")
 
             """消息"""
             message_part = "<level>{message}</level>"
@@ -71,7 +84,7 @@ class LoggerConfig(object):
             return " | ".join(parts) + "\n"
 
         """控制台输出"""
-        logger.add(
+        _base_logger.add(
             sys.stdout,
             level="INFO",
             colorize=True,
@@ -91,7 +104,7 @@ class LoggerConfig(object):
         # )
 
         """错误日志单独文件"""
-        logger.add(
+        _base_logger.add(
             self.log_dir / f"{self.app_name}_error_{{time:YYYY-MM-DD}}.log",
             format=format_record,
             level="ERROR",
@@ -101,6 +114,18 @@ class LoggerConfig(object):
             diagnose=True  # 显示变量值
         )
 
-        # self._configured = True
+        _patched_logger = _base_logger.patch(self.patch_record)
+        _patched_logger.success("Logger Config successfully configured.")
+        return _patched_logger
 
-        logger.success("Logger Config successfully configured.")
+    """设置拦截器，在进入日志记录前更新上下文"""
+    @staticmethod
+    def patch_record(record):
+        context = GlobalContext.get_all()
+        context = {k:v for k,v in context.items()}
+        record["extra"].update(context)
+
+def get_logger():
+    if _patched_logger is None:
+        raise RuntimeError(f"Logger not configured.")
+    return _patched_logger

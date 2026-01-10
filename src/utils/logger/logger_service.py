@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from loguru import logger
+from src.utils.logger.logger_config import get_logger
 from typing import Any, Dict, Optional
 from src.utils.global_context.global_context import GlobalContext
 
@@ -10,7 +10,7 @@ class LoggerService:
 
     def __init__(self):
         if not hasattr(self, 'logger'):
-            self.logger = logger
+            self.logger = get_logger()
 
     @classmethod
     def get_instance(cls):
@@ -18,36 +18,24 @@ class LoggerService:
             cls._instance = cls()
         return cls._instance
 
-    @staticmethod
-    def _get_context() -> Dict[str, Any]:
-        """获取当前上下文信息"""
-        context = {}
-
-        """收集所有上下文"""
-        if app_name := GlobalContext.app_name.get():
-            context["app_name"] = app_name
-
-        if env_name := GlobalContext.env.get():
-            context["env_name"] = env_name
-
-        if service_name := GlobalContext.service_name.get():
-            context["service_name"] = service_name
-
-        if req_id := GlobalContext.request_id.get():
-            context['request_id'] = req_id
-
-        if u_id := GlobalContext.user_id.get():
-            context['user_id'] = u_id
-        return context
+    # @staticmethod
+    # def _get_context() -> Dict[str, Any]:
+    #     """获取当前上下文信息"""
+    #     context = {}
+    #
+    #     """收集所有上下文"""
+    #     if app_name := GlobalContext.get('app_name'):
+    #         context["app_name"] = app_name
+    #
+    #     if env_name := GlobalContext.get('env_name'):
+    #         context["env_name"] = env_name
+    #     return context
 
     def _log(self, level: str, message: str, exception: Optional[Exception] = None, **kwargs):
-        context = self._get_context()
-        context.update(kwargs)
-        bound_logger = self.logger.bind(**context).opt(depth=2)
         if exception and level.lower() == "error":
-            bound_logger.opt(exception=True).error(message)
+            self.logger.opt(exception=True, depth=2).error(message)
         else:
-            getattr(bound_logger, level.lower())(message)
+            getattr(self.logger.opt(depth=2), level.lower())(message)
 
     def info(self, message: str, **kwargs):
         """结构化 INFO 日志"""
