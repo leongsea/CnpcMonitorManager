@@ -5,7 +5,6 @@
 """
 import aiohttp
 from typing import Optional
-
 from src.utils.decorators.decorators import auto_request_context
 from src.utils.logger.logger_service import LoggerService
 from src.utils.global_context.global_context import GlobalContext

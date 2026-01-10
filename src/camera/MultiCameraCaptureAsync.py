@@ -3,13 +3,10 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from hikvision_client import HikvisionClientAsync
 
-from src.utils.dependency.denpendency_container import DependencyContainer
-
 
 class MultiCameraCaptureAsync:
     """异步多个摄像头图片捕获器"""
     def __init__(self):
-        self.logger = DependencyContainer.get_logger("MultiCameraCaptureAsync")
         self.executor = ThreadPoolExecutor(
             max_workers=1,
             thread_name_prefix="Camera_Manager")
@@ -25,7 +22,9 @@ class MultiCameraCaptureAsync:
         pass
 
     def _run_capture_async(self):
-        """因为线程池只接受同步任务，所以这里采用同步函数"""
+        """因为线程池只接受同步任务，所以这里采用
+
+        同步函数"""
         async def capture_async():
             """同步函数里加异步函数用来执行真的任务"""
             client = HikvisionClientAsync()

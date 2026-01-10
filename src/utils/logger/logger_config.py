@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-from loguru import logger as _base_logger
 from pathlib import Path
+from loguru import logger as _base_logger
+from src.utils.common.file_tools import PathUtil
 from src.utils.global_context.global_context import GlobalContext
 
 # 全局变量: 存储 patched logger
@@ -10,22 +11,11 @@ _patched_logger = None
 class LoggerConfig(object):
     """日志配置类"""
     """仅做一次配置，所以无需设置单例"""
-    # _instance = None
-    # _configured = False
-    #
-    # def __new__(cls, *args, **kwargs):
-    #     if cls._instance is None:
-    #         logger.warning(f"Not found {cls.__name__}._instance")
-    #         cls._instance = super().__new__(cls)
-    #     else:
-    #         logger.success(f"Found {cls.__name__}._instance.")
-    #     return cls._instance
 
-    def __init__(self, log_dir:str = "../storage/logs", app_name:str = "cnpc_monitor"):
-        self.log_dir = Path(log_dir)
+    def __init__(self, log_dir:str = "storage/logs", app_name:str = "cnpc_monitor"):
+
         self.app_name = app_name
-        self.log_dir.mkdir(parents=True, exist_ok=True)
-
+        self.log_dir = PathUtil(log_dir).set_save_dir().ensure_create()
 
     def setup_logger(self):
         """配置结构化日志"""
