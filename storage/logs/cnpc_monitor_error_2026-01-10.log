@@ -1,0 +1,16 @@
+2026-01-10 12:47:31 | ERROR    | src.camera.hikvision_client:capture_image_async:85 | HikvisionClientAsync | request_ID:Req-1768020450799-iv0ija | host_IP:192.168.2.124 | UnKnow:capture exception: , Elapsed_time: 1.01S
+2026-01-10 12:47:31 | ERROR    | src.camera.hikvision_client:test_connection_async:95 | HikvisionClientAsync | host_IP:0.0.0.0 | Elapsed_Time:N/A s | Capture Image Failed
+2026-01-10 12:47:31 | ERROR    | src.camera.hikvision_client:capture_image_async:85 | HikvisionClientAsync | request_ID:Req-1768020450800-nyr6co | host_IP:192.168.2.124 | UnKnow:capture exception: , Elapsed_time: 1.01S
+2026-01-10 12:47:31 | ERROR    | src.camera.hikvision_client:test_connection_async:95 | HikvisionClientAsync | host_IP:0.0.0.0 | Elapsed_Time:N/A s | Capture Image Failed
+2026-01-10 12:56:23 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768020982422-n7w3zw | host_IP:192.168.2.114 | UnKnow:capture exception: , Elapsed_time: 1.01S
+2026-01-10 12:56:23 | ERROR    | src.camera.hikvision_client:test_connection_async:97 | HikvisionClientAsync | host_IP:0.0.0.0 | Elapsed_Time:N/A s | Capture Image Failed
+2026-01-10 12:56:23 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768020982422-ttzeni | host_IP:192.168.2.124 | UnKnow:capture exception: , Elapsed_time: 1.01S
+2026-01-10 12:56:23 | ERROR    | src.camera.hikvision_client:test_connection_async:97 | HikvisionClientAsync | host_IP:0.0.0.0 | Elapsed_Time:N/A s | Capture Image Failed
+2026-01-10 12:58:23 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768021102047-pyyuc5 | host_IP:192.168.2.114 | UnKnow:capture exception: , Elapsed_time: 1.01S
+2026-01-10 12:58:23 | ERROR    | src.camera.hikvision_client:test_connection_async:97 | HikvisionClientAsync | host_IP:0.0.0.0 | Elapsed_Time:N/A s | Capture Image Failed
+2026-01-10 12:58:23 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768021102048-l6slov | host_IP:192.168.2.124 | UnKnow:capture exception: , Elapsed_time: 1.01S
+2026-01-10 12:58:23 | ERROR    | src.camera.hikvision_client:test_connection_async:97 | HikvisionClientAsync | host_IP:0.0.0.0 | Elapsed_Time:N/A s | Capture Image Failed
+2026-01-10 12:59:26 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768021165754-yt2xia | host_IP:192.168.2.114 | UnKnow:capture exception: , Elapsed_time: 1.02S
+2026-01-10 12:59:26 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768021165755-k81okz | host_IP:192.168.2.124 | UnKnow:capture exception: , Elapsed_time: 1.02S
+2026-01-10 13:03:18 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768021397135-h6g1rg | host_IP:192.168.2.114 | UnKnow:capture exception: , Elapsed_time: 1.01S
+2026-01-10 13:03:18 | ERROR    | src.camera.hikvision_client:capture_image_async:87 | HikvisionClientAsync | request_ID:Req-1768021397136-63khgp | host_IP:192.168.2.124 | UnKnow:capture exception: , Elapsed_time: 1.01S
