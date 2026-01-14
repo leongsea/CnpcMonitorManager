@@ -2,6 +2,10 @@
 from pathlib import Path
 
 class PathUtil:
+    """
+    文件通用工具类
+    :param file_dir: 直接传入目录符号后的路径即可, eg: storage/temp
+    """
     def __init__(self, file_dir:str = None):
         self.file_dir = file_dir or 'storage/temp'
         self.save_dir = None

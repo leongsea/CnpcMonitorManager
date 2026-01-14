@@ -5,8 +5,9 @@
 """
 import aiohttp
 from typing import Optional
-from src.utils.decorators.decorators import auto_request_context
+from src.database.cmera_model import Camera
 from src.utils.logger.logger_service import LoggerService
+from src.utils.decorators.decorators import auto_request_context
 from src.utils.global_context.global_context import GlobalContext
 
 """公共常量"""
@@ -17,19 +18,18 @@ PORT = 554
 class HikvisionClientAsync:
     """海康摄像头客户端"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, camera: Camera, **kwargs):
         """
-        初始化摄像头客户端
-        :param ip: 191.51.100.25
-        :param username: admin
-        :param password: hik12345+/tx123456/Tx136248
-        :param port: 554
-        :param timeout: 请求超时时间, 10秒默认
+        摄像头客户端初始函数
+        Args:
+            camera: 需要传入的摄像头对象Camera，包含ip,username,password等
+            **kwargs: 其他关键字参数可能包括:
+                user_id: 摄像头序号
         """
-        self.ip = kwargs.get('host_ip')
-        self.password = kwargs.get('password')
-        self.user_id = kwargs.get('user_id')
-        self.username = 'admin'
+        self.ip = Camera.ip
+        self.username = Camera.username
+        self.password = camera.password
+        self.user_id = kwargs.get("user_id")
         self.port = PORT
         self.timeout = TIMEOUT
         self.base_url = f"http://{self.ip}:{self.port}"
@@ -44,24 +44,23 @@ class HikvisionClientAsync:
         self.logger = LoggerService.get_instance()
 
     @auto_request_context
-    async def capture_image_async(self, **kwargs) -> Optional[bytes]:
-        """
-        捕获单个摄像头图片
-        :param channel: 通道号默认为1
-        :return: bytes: 二进制数据，失败返回None
+    async def capture_image_async(self) -> Optional[bytes]:
         """
 
-        """上下文设置"""
-        # 固定的几个字段需要去设置，每个client是不一样的
-        GlobalContext.set_multiple(service_name=self.__class__.__name__, usre_id='5', host_ip=self.ip)
+        Returns:
+            返回摄像头抓图响应
+        """
+        # --- 上下文设置 ---
+        GlobalContext.set_multiple(service_name=self.__class__.__name__, usre_id=self.user_id, host_ip=self.ip)
 
-        """Create an object for timeout"""
+        # --- 连接超时配置 ---
         timeout = aiohttp.ClientTimeout(
             total=self.timeout,
             connect=self.timeout,
             sock_read=self.timeout,
             sock_connect=self.timeout,
         )
+
         self.logger.info(f"Starting Connection ...")
 
         async with aiohttp.ClientSession(timeout=timeout) as session:
@@ -74,9 +73,15 @@ class HikvisionClientAsync:
                     self.logger.warning(f"failed to capture,Status_code: {response.status}")
                     return None
 
-
     async def test_connection_async(self):
-        """异步测试连接"""
+        """
+        测试函数：测试capture_image_async是否连接成功
+
+        Returns:
+            连接响应成功：响应数据不为None则返回True
+
+            连接响应报错: 其余情况均返回False
+        """
         try:
             image_data = await self.capture_image_async()
             return image_data is not None
