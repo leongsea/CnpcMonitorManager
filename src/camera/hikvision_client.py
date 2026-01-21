@@ -26,8 +26,8 @@ class HikvisionClientAsync:
             **kwargs: 其他关键字参数可能包括:
                 user_id: 摄像头序号
         """
-        self.ip = Camera.ip
-        self.username = Camera.username
+        self.ip = camera.ip
+        self.username = camera.username
         self.password = camera.password
         self.user_id = kwargs.get("user_id")
         self.port = PORT

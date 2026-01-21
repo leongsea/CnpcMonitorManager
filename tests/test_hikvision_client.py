@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 from src.camera.hikvision_client import HikvisionClientAsync
+from src.database.cmera_model import Camera
 from src.utils.logger.logger_config import LoggerConfig
 from src.utils.global_context.global_context import GlobalContext
 import asyncio
 
 async def test():
-    client = HikvisionClientAsync(user_id = '5', host_ip = '192.168.2.114', password = '<PASSWORD>')
-    client2 = HikvisionClientAsync(user_id = '6', host_ip = '192.168.2.124', password = '<PASSWORD>')
+    camera1 = Camera(username = '5', ip = '192.168.2.114', password = '<PASSWORD>')
+    camera2 = Camera(username = '6', ip = '192.168.2.124', password = '<PASSWORD>')
+    client = HikvisionClientAsync(camera1)
+    client2 = HikvisionClientAsync(camera2)
     clients = [client, client2]
     tasks = [c.test_connection_async() for c in clients]
     result = await asyncio.gather(*tasks)

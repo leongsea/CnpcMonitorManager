@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import sys
-from pathlib import Path
 from loguru import logger as _base_logger
 from src.utils.common.file_tools import PathUtil
 from src.utils.global_context.global_context import GlobalContext
@@ -97,7 +96,9 @@ class LoggerConfig(object):
         _base_logger.add(
             self.log_dir / f"{self.app_name}_error_{{time:YYYY-MM-DD}}.log",
             format=format_record,
-            level="ERROR",
+            level="INFO",
+            mode="a",
+            encoding="utf-8", 
             rotation="100 MB",
             retention="90 days",
             backtrace=True,  # 显示完整堆栈
