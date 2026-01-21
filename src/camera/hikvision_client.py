@@ -11,7 +11,7 @@ from src.utils.decorators.decorators import auto_request_context
 from src.utils.global_context.global_context import GlobalContext
 
 """公共常量"""
-TIMEOUT = 3
+TIMEOUT = 5
 PORT = 554
 
 
