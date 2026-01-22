@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import asyncio
 from asyncio import Semaphore
-from src.database.cmera_model import Camera
+from src.database.camera_model import Camera
 from typing import Dict, Any, List
 from src.camera.hikvision_client import HikvisionClientAsync
 

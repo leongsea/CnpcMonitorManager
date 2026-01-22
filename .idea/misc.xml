@@ -3,4 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="MonitorEnv" />
   </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="uv (cnpc_monitor_mcp_project) (2)" project-jdk-type="Python SDK" />
 </project>

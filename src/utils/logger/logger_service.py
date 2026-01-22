@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from src.utils.logger.logger_config import get_logger
 from typing import Any, Dict, Optional
-from src.utils.global_context.global_context import GlobalContext
 
 
 class LoggerService:

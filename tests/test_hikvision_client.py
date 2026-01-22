@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+
+
 from src.camera.hikvision_client import HikvisionClientAsync
-from src.database.cmera_model import Camera
+from src.database.camera_model import Camera
 from src.utils.logger.logger_config import LoggerConfig
 from src.utils.global_context.global_context import GlobalContext
 import asyncio
